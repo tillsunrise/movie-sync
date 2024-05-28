@@ -26,7 +26,8 @@ export default function Page() {
                 url: msg.url,
                 inited: true
             })
-            setUrl(urlInput)
+            setUrl(msg.url)
+            setUrlInput(msg.url)
         }
         socket.on('rootinit', onRootInit);
         return () => {
