@@ -22,12 +22,13 @@ export default function Page() {
         function onRootInit(d: any) {
             const msg = JSON.parse(d) as ServerMessage
             console.log('root init', msg);
+            const url = msg.url ? msg.url : 'http://test'
             $playerState.set({
-                url: msg.url,
+                url: url,
                 inited: true
             })
-            setUrl(msg.url)
-            setUrlInput(msg.url)
+            setUrl(url)
+            setUrlInput(url)
         }
         socket.on('rootinit', onRootInit);
         return () => {
