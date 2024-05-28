@@ -38,7 +38,7 @@ export const UserList = ({ roomName }: { roomName: string }) => {
                 url: msg.url
             })
         }
-        playerState.length == 0 && socket.on('roomInfo', onRoomInfo)
+        socket.on('roomInfo', onRoomInfo)
         return () => {
             clearInterval(interval)
             socket.off('roomInfo', onRoomInfo)
