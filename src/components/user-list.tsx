@@ -1,4 +1,4 @@
-import { $playerState, $userInfo, $userStatus } from "@/store/player"
+import { $userInfo, $userStatus } from "@/store/player"
 import { useStore } from '@nanostores/react'
 import { useEffect } from "react"
 import {
@@ -11,12 +11,11 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { socket } from "./socket"
-import { ClientMessage, ServerMessage } from "@/lib/types/message"
+import { ClientMessage } from "@/lib/types/message"
 
 export const UserList = ({ roomName }: { roomName: string }) => {
     const userStatus = useStore($userStatus)
     const userInfo = useStore($userInfo)
-    const playerState = useStore($playerState)
     useEffect(() => {
         const interval = setInterval(() => {
             socket.emit("getRoomInfo", JSON.stringify({
@@ -24,25 +23,7 @@ export const UserList = ({ roomName }: { roomName: string }) => {
                 room: roomName
             } as ClientMessage))
         }, 1000)
-
-        function onRoomInfo(d: any) {
-            console.log('get room info response', JSON.parse(d) as ServerMessage);
-            const msg = JSON.parse(d) as ServerMessage
-            if (!msg.userStatus) {
-                return
-            }
-            $userStatus.set([
-                ...msg.userStatus
-            ])
-            $playerState.set({
-                url: msg.url
-            })
-        }
-        socket.on('roomInfo', onRoomInfo)
-        return () => {
-            clearInterval(interval)
-            socket.off('roomInfo', onRoomInfo)
-        }
+        return () => clearInterval(interval)
     }, [])
 
     return (

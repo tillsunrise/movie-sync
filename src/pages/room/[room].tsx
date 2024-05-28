@@ -3,11 +3,11 @@ import { socket } from '@/components/socket';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { UserList } from '@/components/user-list';
-import { ClientMessage } from '@/lib/types/message';
+import { ClientMessage, ServerMessage } from '@/lib/types/message';
 import { $playerState, $userInfo } from '@/store/player';
 import { useStore } from '@nanostores/react';
 import { useRouter } from 'next/router'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
     const router = useRouter()
@@ -17,6 +17,23 @@ export default function Page() {
     const [urlInput, setUrlInput] = useState<string | undefined>();
 
     const roomName = router.query.room as string
+
+    useEffect(() => {
+        function onRootInit(d: any) {
+            const msg = JSON.parse(d) as ServerMessage
+            console.log('root init', msg);
+            $playerState.set({
+                url: msg.url,
+                inited: true
+            })
+            setUrl(urlInput)
+        }
+        socket.on('rootinit', onRootInit);
+        return () => {
+            socket.off('rootinit', onRootInit);
+        };
+      }, []);
+
     return (
         <div className='flex flex-col lg:flex-row m-2 justify-center'>
             {roomName && url && <div className='w-full lg:mr-2'>
