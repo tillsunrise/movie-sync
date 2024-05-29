@@ -18,24 +18,6 @@ export default function Page() {
 
     const roomName = router.query.room as string
 
-    // useEffect(() => {
-    //     function onRootInit(d: any) {
-    //         const msg = JSON.parse(d) as ServerMessage
-    //         console.log('root init', msg);
-    //         const url = msg.url ? msg.url : 'http://test'
-    //         $playerState.set({
-    //             url: url,
-    //             inited: true
-    //         })
-    //         setUrl(url)
-    //         setUrlInput(url)
-    //     }
-    //     socket.on('rootinit', onRootInit);
-    //     return () => {
-    //         socket.off('rootinit', onRootInit);
-    //     };
-    //   }, []);
-
     return (
         <div className='flex flex-col lg:flex-row m-2 justify-center'>
             {roomName && <div className='w-full lg:mr-2'>

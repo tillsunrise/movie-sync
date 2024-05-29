@@ -67,24 +67,22 @@ export const Player = ({ roomName }: { roomName: string }) => {
             console.log('root init', msg);
             $playerState.set({
                 url: msg.url,
-                inited: true
+                // inited: true
             })
             if (!msg.userStatus) {
                 return
             }
             const maxtime = Math.max(...msg.userStatus.map(user => user?.time ?? 0));
             console.log(maxtime)
-
-            while(!player.current){new Promise(resolve => setTimeout(resolve, 1000));}
+            socket.emit("setTime", JSON.stringify({
+                username: userinfo?.username,
+                time: Math.ceil(maxtime),
+                room: roomName
+            } as ClientMessage))
             
-            if (player.current && Math.abs(player.current.currentTime - maxtime) > 1) {
-                player.current.currentTime = maxtime
-                socket.emit("setTime", JSON.stringify({
-                    username: userinfo?.username,
-                    time: Math.ceil(maxtime),
-                    room: roomName
-                } as ClientMessage))
-            }
+            // if (player.current && Math.abs(player.current.currentTime - maxtime) > 1) {
+            //     player.current.currentTime = maxtime
+            // }
         }
 
         function onRoomInfo(d: any) {
