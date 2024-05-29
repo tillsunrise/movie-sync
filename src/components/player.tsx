@@ -73,9 +73,14 @@ export const Player = ({ roomName }: { roomName: string }) => {
                 return
             }
             const maxtime = Math.max(...msg.userStatus.map(user => user?.time ?? 0));
+            console.log(maxtime)
             if (player.current && Math.abs(player.current.currentTime - maxtime) > 1) {
                 player.current.currentTime = maxtime
-                player.current.state.canPlay ? player.current.play() : null
+                socket.emit("setTime", JSON.stringify({
+                    username: userinfo?.username,
+                    time: Math.ceil(maxtime),
+                    room: roomName
+                } as ClientMessage))
             }
         }
 
