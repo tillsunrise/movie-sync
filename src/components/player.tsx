@@ -72,9 +72,10 @@ export const Player = ({ roomName }: { roomName: string }) => {
             if (!msg.userStatus) {
                 return
             }
-            const mintime = Math.min(...msg.userStatus.map(user => user?.time ?? 0));
-            if (player.current && Math.abs(player.current.currentTime - mintime) > 10) {
-                player.current.currentTime = mintime
+            const maxtime = Math.max(...msg.userStatus.map(user => user?.time ?? 0));
+            if (player.current && Math.abs(player.current.currentTime - maxtime) > 1) {
+                player.current.currentTime = maxtime
+                player.current.state.canPlay ? player.current.play() : null
             }
         }
 
