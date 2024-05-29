@@ -69,6 +69,13 @@ export const Player = ({ roomName }: { roomName: string }) => {
                 url: msg.url,
                 inited: true
             })
+            if (!msg.userStatus) {
+                return
+            }
+            const mintime = Math.min(...msg.userStatus.map(user => user?.time ?? 0));
+            if (player.current && Math.abs(player.current.currentTime - mintime) > 10) {
+                player.current.currentTime = mintime
+            }
         }
 
         function onRoomInfo(d: any) {
@@ -80,10 +87,10 @@ export const Player = ({ roomName }: { roomName: string }) => {
             $userStatus.set([
                 ...msg.userStatus
             ])
-            const mintime = Math.min(...msg.userStatus.map(user => user?.time ?? Infinity));
-            if (player.current && Math.abs(player.current.currentTime - mintime) > 10) {
-                player.current.currentTime = mintime
-            }
+            // const mintime = Math.min(...msg.userStatus.map(user => user?.time ?? 0));
+            // if (player.current && Math.abs(player.current.currentTime - mintime) > 10) {
+            //     player.current.currentTime = mintime
+            // }
         }
 
         function onPause() {
